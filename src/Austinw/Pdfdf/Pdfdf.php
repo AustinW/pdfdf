@@ -9,6 +9,8 @@ use Wesnick\FdfUtility\FdfWriter;
 
 use PdfdfFileNotFoundException;
 
+use \App;
+
 class Pdfdf
 {
 	protected $fdfUtility;
@@ -27,11 +29,9 @@ class Pdfdf
 
 	protected $_eraseTempFDF;
 
-	public function __construct(PdfForm $fdfUtility, PdftkDumpParser $pdftkDumpParser, FdfWriter $fdfWriter)
+	public function __construct(PdfForm $fdfUtility, FdfWriter $fdfWriter)
 	{
 		$this->fdfUtility = $fdfUtility;
-
-		$this->pdftkDumpParser = $pdftkDumpParser;
 
 		$this->fdfWriter = $fdfWriter;
 	}
@@ -49,6 +49,11 @@ class Pdfdf
 	public function registerFieldHandler(PdfFieldHandlerInterface $fieldHanlder)
 	{
 		$this->fieldHandler = $fieldHandler;
+	}
+
+	public function setPdftkDumpParser(PdftkDumpParser $pdftkDumpParser)
+	{
+		$this->pdftkDumpParser = $pdftkDumpParser;
 	}
 
 	public function setConfiguration(array $config)
@@ -69,6 +74,8 @@ class Pdfdf
 		$dataDumper = $this->fdfFactory->dumpDataFields($inputPdf, $fieldsDump);
 
 		$dataDumper->generate(array(), true);
+
+		$this->setPdftkDumpParser(App::make('pdftkDumpParser', $fieldsDump));
 
 		$this->pdftkDumpParser->setCurrentContents($fieldsDump);
 

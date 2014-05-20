@@ -13,7 +13,7 @@ class PdfdfServiceProvider extends ServiceProvider {
      *
      * @var bool
      */
-    protected $defer = false;
+    protected $defer = true;
 
     /**
      * Bootstrap the application events.
@@ -38,8 +38,12 @@ class PdfdfServiceProvider extends ServiceProvider {
             return new PDFTKFactory($factoryPath);
         });
 
+        $this->app->bind('pdftkDumpParser', function($app, $file) {
+            return new PdftkDumpParser($file);
+        });
+
         $this->app['pdfdf'] = $this->app->share(function($app) {
-            $pdfdf = new Pdfdf(new PdfForm, new PdftkDumpParser, new FdfWriter);
+            $pdfdf = new Pdfdf(new PdfForm, new FdfWriter);
             $pdfdf->registerFactory($app['pdfdf.factory']);
 
             $pdfdf->setConfiguration(array(
