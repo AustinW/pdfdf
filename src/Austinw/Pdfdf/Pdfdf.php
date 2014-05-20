@@ -77,7 +77,7 @@ class Pdfdf
 
 		$this->setPdftkDumpParser(App::make('pdftkDumpParser', $fieldsDump));
 
-		$this->pdftkDumpParser->setCurrentContents($fieldsDump);
+		// $this->pdftkDumpParser->setCurrentContents($fieldsDump);
 
 		$fields = $this->pdftkDumpParser->parse();
 
