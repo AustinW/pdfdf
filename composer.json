@@ -14,6 +14,5 @@
         "psr-0": {
             "Austinw\\Pdfdf\\": "src/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
