@@ -23,6 +23,10 @@ class Pdfdf
 
 	protected $fdfWriter;
 
+	protected $fileName;
+
+	protected $_eraseTempFDF;
+
 	public function __construct(PdfForm $fdfUtility, PdftkDumpParser $pdftkDumpParser, FdfWriter $fdfWriter)
 	{
 		$this->fdfUtility = $fdfUtility;
@@ -52,6 +56,8 @@ class Pdfdf
 		$this->tmpStorageLocation = $config['tmp'];
 
 		$this->pdfStorageLocation = $config['pdf'];
+
+		$this->_eraseTempFDF = $config['erase_temp_fdf'];
 	}
 
 	public function extractFields($inputPdf)
@@ -68,7 +74,9 @@ class Pdfdf
 
 		$fields = $this->pdftkDumpParser->parse();
 
-		unlink($fieldsDump);
+		if ($this->_eraseTempFDF) {
+			unlink($fieldsDump);
+		}
 
 		return $fields;
 	}
@@ -84,15 +92,24 @@ class Pdfdf
 		$this->fdfWriter->generate();
 		$this->fdfWriter->save($fdfFile);
 
-		$formFiller = $this->fdfFactory->fillForm($inputPdf, $fdfFile, $this->fileName($outputPdf));
+		$this->setFileName($outputPdf);
+
+		$formFiller = $this->fdfFactory->fillForm($inputPdf, $fdfFile, $this->getFileName());
 		$formFiller->generate();
-		
-		unlink($fdfFile);
+
+		if ($this->_eraseTempFDF) {
+			unlink($fdfFile);
+		}
 	}
 
-	protected function fileName($outputPdf)
+	public function setFileName($outputPdf)
 	{
-		return $this->pdfStorageLocation . DIRECTORY_SEPARATOR . $outputPdf . '_' . self::str_random(10) . '.pdf';
+		$this->fileName = $this->pdfStorageLocation . DIRECTORY_SEPARATOR . $outputPdf . '_' . self::str_random(5) . '.pdf';
+	}
+
+	public function getFileName()
+	{
+		return $this->fileName;
 	}
 
 	public function fill($inputPdf, $outputPdf)

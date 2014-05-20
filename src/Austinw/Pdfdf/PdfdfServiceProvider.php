@@ -43,8 +43,9 @@ class PdfdfServiceProvider extends ServiceProvider {
             $pdfdf->registerFactory($app['pdfdf.factory']);
 
             $pdfdf->setConfiguration(array(
-                'tmp' => $app['config']->get('pdfdf::storage.tmp'),
-                'pdf' => $app['config']->get('pdfdf::storage.pdf')
+                'tmp'            => $app['config']->get('pdfdf::storage.tmp'),
+                'pdf'            => $app['config']->get('pdfdf::storage.pdf'),
+                'erase_temp_fdf' => $app['config']->get('pdfdf::erase_temp_fdf'),
             ));
 
             return $pdfdf;

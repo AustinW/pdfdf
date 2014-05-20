@@ -16,4 +16,7 @@ return array(
     	'tmp' => storage_path() . DIRECTORY_SEPARATOR . 'tmp',
     	'pdf' => storage_path() . DIRECTORY_SEPARATOR . 'pdf'
     ),
+    
+    // Erase the temporary fdf files generated after they've been used. Turn off for debugging
+    'erase_temp_fdf' => false,
 );
